@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <h2>Add new category</h2>
+
+    {{ form_start(category_form) }}
+
+    {{ form_widget(category_form) }}
+
+    {{ form_end(category_form) }}
+
+    <hr>
+    
+{% endblock %}
+

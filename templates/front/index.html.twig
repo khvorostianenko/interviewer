@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if category.parent is not empty %}
+        <div>
+            <a href="{{ path('front_index') }}">Home page</a>
+        </div>
+        <div>
+            <b>Current category:</b> {{ category.description }}
+        </div>
+    {% endif %}    
+    
+    {% if random_unlearned_question is not empty %}
+        <div>
+            <div>
+                <b>Question:</b><br>
+                <textarea class="question_textarea">{{ random_unlearned_question.caption }}</textarea>
+            </div>
+            <div>
+                <b>You can write here your answer:</b><br>
+                <textarea class="answer_textarea"></textarea>
+            </div>
+            <div style="display: none" id="answer">
+                <b>Answer:</b><br>
+                <textarea class="answer_textarea">{{ random_unlearned_question.answerOfficial }}</textarea>
+            </div>
+            <a class="btn btn-info" onclick="$('#answer').show()" href="#">Show answer</a>
+            <a class="btn btn-success" href="{{ path('question_learned', {'idCategory': category.id, 'id': random_unlearned_question.id }) }}">Learned!</a>
+            <a class="btn btn-danger" href="{{ path('index', {'id' : category.id }) }}">Next</a>
+        </div>
+    {% else %}
+        No question to study!
+    {% endif %}
+
+    {% import _self as self %}
+
+    {% macro recursiveCategory(category) %}
+        {% import _self as self %}
+        
+        <li>
+            <h4><a href="{{ path('front_index', {'id': category.id}) }}">{{ category.description }}</a></h4>
+
+            {% if category.children|length %}
+                <ul>
+                    {% for child in category.children %}
+                        {{ self.recursiveCategory(child) }}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </li>
+    {% endmacro %}
+
+    {% if category %}
+        <div id="categories">
+            <ul>
+                {% for child in category.children %}
+                    {{ self.recursiveCategory(child) }}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+{% endblock %}

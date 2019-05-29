@@ -1,0 +1,129 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }} 
+        </div>
+    {% endfor %}
+    
+    <a href="{{ path("index") }}">Index page</a>
+    
+    <hr>
+    
+    <h2>
+        <a class="btn btn-success" href="{{ path('category_add', {'idCategory': category.id}) }}">+ Add new category</a>
+    </h2>
+    
+    {% if category.parent %}
+        <h2>
+            <a class="btn btn-success" href="{{ path('question_add', {'idCategory': category.id}) }}">+ Add new question</a>
+        </h2>
+    {% endif %}
+    
+    <hr>
+    
+    {% if category.parent is not null %}
+        <b>Parent category:</b> <a href="{{ path('index', {'id' : category.parent.id}) }}">{{ category.parent.description }}</a><br>
+        <b>Current category:</b> {{ category.description }}<br>
+    {% endif %}
+    
+    {# Child categories block #}
+    {% if category.children is not empty %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">id</th>
+                <th scope="col">Name</th>
+                <th scope="col">Reset progress</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for children in category.children %}
+                <tr>
+                    <th scope="row">{{ children.id }}</th>
+                    <td>
+                        <a class="btn btn-outline-info" href="{{ path('index', {'id' : children.id}) }}">
+                            {{ children.description }}
+                        </a>
+                    </td>
+                    <td>
+                        <a class="btn btn-info" href="{{ path('category_progress_reset', {'idCategory': category.id, 'id': children.id}) }}">
+                            Reset
+                        </a>
+                    </td>
+                    <td>
+                        <a class="btn btn-success" href="{{ path('category_edit', {'idCategory': category.id, 'id': children.id}) }}">
+                            Edit
+                        </a>
+                    </td>
+                    <td>
+                        <a class="btn btn-danger" href="{{ path('category_delete', {'idCategory': category.id, 'id': children.id}) }}">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+    
+    <hr>
+
+    {# Child questions block #}
+    {% if all_questions is not empty %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">id</th>
+                <th scope="col">Caption</th>
+                <th scope="col">Learned</th>
+                <th scope="col">Enabled</th>
+                <th scope="col">Category</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for question in all_questions %}
+                <tr>
+                    <th scope="row">{{ question.id }}</th>
+                    <td>
+                        {{ question.caption }}
+                    </td>
+                    <td>
+                        {{ question.learned }}
+                    </td>
+                    <td>
+                        {{ question.enabled }}
+                    </td>
+                    <td>
+                        {{ question.category.description }}
+                    </td>
+                    <td>
+                        <a class="btn btn-success" href="{{ path('question_edit', {'idCategory': category.id, 'id': question.id}) }}">
+                            Edit
+                        </a>
+                    </td>
+                    <td>
+                        <a class="btn btn-secondary" href="{{ path('question_delete', {'idCategory': category.id, 'id': question.id }) }}">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <hr>
+{% endblock %}
+

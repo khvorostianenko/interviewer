@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <h2>Add new question</h2>
+
+    {{ form_start(question_form) }}
+
+    {{ form_row(question_form.category) }}
+
+    {{ form_row(question_form.caption, { 'attr':{'style':'height:200px'}}) }}
+
+    {{ form_row(question_form.answerOfficial, { 'attr':{'style':'height:400px'} }) }}
+
+    {{ form_widget(question_form) }}
+    
+    {{ form_end(question_form) }}
+
+    <hr>
+    
+{% endblock %}
+
